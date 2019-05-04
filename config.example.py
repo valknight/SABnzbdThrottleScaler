@@ -11,3 +11,6 @@ url = "https://path_to_sabnzbd"
 
 # api key
 key = "api_key"
+
+# set this to false if you want to run this on smth like a cron job
+loop = True

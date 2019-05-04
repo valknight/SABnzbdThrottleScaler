@@ -58,5 +58,8 @@ def autoScale():
 
     
 if __name__ == "__main__":
-    while True:
+    if config.loop:
+        while True:
+            autoScale()
+    else:
         autoScale()
