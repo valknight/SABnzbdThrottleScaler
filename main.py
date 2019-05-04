@@ -53,7 +53,6 @@ def autoScale():
     space_gap_max = config.free_space_unthrottled - config.free_space_throttled # this is the max dif between the 100% throttle and 0% throttle
     space_gap_cur = spaceAfterNextDownload - config.free_space_throttled # dif between 100% and the current
     percentage = 100 - (((space_gap_max-space_gap_cur) / space_gap_max) * 100) # calculate the percentage we need to set the throttle by how much of the throttled buffer is being used
-    print(int(percentage))
     throttle(percentage)
 
     
