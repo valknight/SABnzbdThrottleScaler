@@ -1,6 +1,7 @@
 import config
 import requests
 import json
+import time
 
 def getApiFormatted(config=config):
     return "{config.url}/api?output=json&apikey={config.key}".format(config=config)
@@ -35,16 +36,13 @@ def resume(config=config):
 def throttle(percentage, config=config):
     if int(percentage) <= 0:
         pause(config=config)
-        return
+        percentage = 0
     elif int(percentage) >= 100:
         percentage = 100.0
+    percentage = int(percentage)
     resume(config=config)
-    response = requests.get("{url}&mode=config&name=speedlimit&value={perc}".format(url=getApiFormatted(config=config), perc=int(percentage)))
-    if json.loads(response.text).get("status"):
-        return True
-    else:
-        print("Something weird happened. Check your SAB logs.")
-        return False
+    response = requests.get("{url}&mode=config&name=speedlimit&value={perc}".format(url=getApiFormatted(config=config), perc=percentage))
+    return percentage
 
 def autoScale():
     spaceFree = float(getFreeSpace())
@@ -57,12 +55,13 @@ def autoScale():
         throttle(percentage)
     space_gap_cur = spaceFree - config.free_space_throttled # dif between 100% and the current
     percentage = 100 - (((space_gap_max-space_gap_cur) / space_gap_max) * 100) # calculate the percentage again now we know it's all good to continue
-    throttle(percentage)
+    return throttle(percentage) # this returns whichever percentage was actually sent to SAB
 
     
 if __name__ == "__main__":
     if config.loop:
         while True:
-            autoScale()
+            print("Throttling at {}%".format(autoScale()))
+            time.sleep(float(config.time_delay/1000))
     else:
         autoScale()

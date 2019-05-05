@@ -14,3 +14,6 @@ key = "api_key"
 
 # set this to false if you want to run this on smth like a cron job
 loop = True
+
+# time delay between each loop (in ms)
+time_delay = 1000
